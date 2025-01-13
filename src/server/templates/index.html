@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Moka pot observer</title>
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function () {
+                setInterval(function() {
+                    fetch('/status')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // console.log(data);
+                            if (data.beeps) {
+                                document.getElementById("beep-on").style.display = "block";
+                                document.getElementById("beep-off").style.display = "none";
+                            } else {
+                                document.getElementById("beep-on").style.display = "none";
+                                document.getElementById("beep-off").style.display = "block";
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }, 500);
+
+                setInterval(function() {
+                    document.getElementById("graph").contentWindow.location.reload();
+                }, 1000)
+            });
+         </script>
+    </head>
+
+    <body>
+        <main>
+            <iframe src="/graph" id="graph" width="1200px" height="500px" style="border: none; display: block; margin: 0 auto">
+            </iframe>
+        
+            <form method="post" action="/stop" style="width: 150px; height: 40px; margin: 0 auto;">
+                <button id="beep-on" type="submit" style="display: none; background-color:rgb(181, 105, 105); width: 100%; height: 100%">
+                    Stop beeping!
+                </button>
+                <button id="beep-off" type="submit" style="display: block; background-color:rgb(132, 156, 188); width: 100%; height: 100%">
+                    Everything chill...
+                </button>
+            </form>
+        </main>
+    </body>
+</html>
