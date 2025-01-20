@@ -48,7 +48,7 @@ def graph():
                 side='right'
             )
         )
-    ), output_type='div', include_plotlyjs='cdn')
+    ), output_type='div')
 
     return plt
 
@@ -78,4 +78,3 @@ def board_post():
 
 if __name__ == '__main__':
     app.run(ssl_context=('cert.pem', 'key.pem'), host="0.0.0.0", port=5001)
-    # app.run(host="0.0.0.0", port=5001)

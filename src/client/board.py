@@ -1,5 +1,6 @@
 import time
 import network
+import machine
 
 ssid = 'xxxx'
 password = 'xxxx'
@@ -12,14 +13,14 @@ def connect():
     while wlan.isconnected() == False:
         print('Waiting for connection...')
         time.sleep(0.5)
+        # wlan.connect(ssid, password)
     ip = wlan.ifconfig()[0]
     print(f'Connected on {ip}')
-    # print(wlan.ifconfig())
+    print(wlan.ifconfig())
     return ip
 
 ip = connect()
 
-import machine
 from mlx90614 import MLX90614  # Initialize I2C bus
 from picozero import Speaker
 
@@ -27,7 +28,7 @@ import urequests as requests
 import ujson as json
 
 URL = 'https://172.20.10.8:5001/board'
-TEMP_TRESHOLD = 25
+TEMP_TRESHOLD = 60
 
 timestamp = time.time()
 
@@ -80,7 +81,7 @@ while True:
 
     post_data = json.dumps({ 'beeps': beeps, 'should_beep': should_beep, 'temp': temp })
     try:
-        response = requests.post(url=URL, headers={'content-type': 'application/json'}, data=post_data)
+        response = requests.post(url=URL, headers={'content-type': 'application/json'}, data=post_data, timeout=2)
     except:
         print('Server is down...')
         time.sleep(1)
